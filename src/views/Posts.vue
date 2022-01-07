@@ -1,41 +1,61 @@
 <template>
-  <div class="posts">
+  <v-container class="posts">
     <h1>Posts</h1>
-    <div id="postsContainer">
-      <div v-for="post in posts" :key="post.id">
-        <h2>{{ post.title }}</h2>
-        <p>author id : {{ post.author_id }}</p>
-        <p>{{ post.content }}</p>
-        <router-link :to="{
-          name: 'PostDetails',
-          params: { id: post.id }
-        }">Voir post</router-link>
-      </div>
-      
-    </div>
-  </div>
+
+    <v-row id="postsContainer">
+      <v-col v-if="posts.length == 0">
+        <p>Aucun post à afficher</p>
+      </v-col>
+      <v-col
+        v-else
+        v-for="post in posts"
+        :key="post.id"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card>
+          <v-card-title class="text-center">{{ post.title }}</v-card-title>
+          <v-card-subtitle>author : {{ post.pseudo }}</v-card-subtitle>
+          <p>{{ post.content }}</p>
+          <router-link
+            :to="{
+              name: 'PostDetails',
+              params: { id: post.id }
+            }"
+            >Voir post</router-link>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import axios from 'axios'
-//import posts from '../posts.json'
+import axios from "axios";
 export default {
-  name: 'Posts',
+  name: "Posts",
 
   data: () => {
     return {
-      posts: null
-    }
+      posts: "",
+    };
   },
   methods: {
-    getPosts: function () {
-      axios.get('http://localhost:3000/api/posts')
-        .then(posts => this.posts = posts.data)
-        .catch(err => console.log(err))
-    }
+    getPosts:  function () {
+       axios.get("http://localhost:3000/api/posts")
+        .then((posts) => {
+          console.log(posts);
+          console.log(posts)
+          this.posts = posts.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
   },
-  mounted() {
-    this.getPosts();
-  }
-}
+    mounted() {
+      this.getPosts();
+    }
+};
 </script>
