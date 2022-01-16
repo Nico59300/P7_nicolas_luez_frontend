@@ -1,27 +1,11 @@
 # p7_nicolas_luez_frontend
 
-## Project setup
+## installer le projet
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### démarrer le projet
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-### frontend
