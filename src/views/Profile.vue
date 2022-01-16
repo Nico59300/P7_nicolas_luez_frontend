@@ -13,6 +13,7 @@ export default {
        name: 'Profile',
        data: function () {
            return {
+               connected: true
            }
        },
        computed: {

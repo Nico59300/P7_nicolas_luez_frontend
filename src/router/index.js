@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Posts from '../views/Posts.vue'
+import Connect from '../views/Connect.vue'
+import PostsList from '../views/PostList.vue'
 import PostDetails from '../views/PostDetails'
-import SignupForm from '../components/SignupForm'
-import LoginForm from '../components/LoginForm'
-import CreatePost from '../views/CreatePost'
 import Profile from '../views/Profile'
+import UserDetails from '../views/UserDetails'
+import MemberList from '../views/MemberList'
 
 Vue.use(VueRouter)
 
@@ -15,11 +15,15 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },{
+    path: '/connect',
+    name: 'Connect',
+    component: Connect
   },
   {
     path: '/posts',
-    name: 'Posts',
-    component: Posts
+    name: 'PostsList',
+    component: PostsList
   },
   {
     path: '/posts/:id',
@@ -27,24 +31,19 @@ const routes = [
     component: PostDetails
   },
   {
-    path: '/create-post',
-    name: 'CreatePost',
-    component: CreatePost
-  },
-  {
-    path: '/signup',
-    name: 'SignupForm',
-    component: SignupForm
-  },
-  {
-    path: '/login',
-    name: 'LoginForm',
-    component: LoginForm
-  },
-  {
     path: '/profile/:id',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/users/:id',
+    name: 'UserDetails',
+    component: UserDetails
+  },
+  {
+    path: '/users/',
+    name: 'MemberList',
+    component: MemberList
   }
 ]
 

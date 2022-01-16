@@ -1,13 +1,15 @@
 <template>
-  <v-container>
+  <v-container id="container">
     <div>
-      <h3 class="text-center">Se connecter à Groupomania</h3>
+      <h3 class="text-center pb-3">Se connecter à Groupomania</h3>
+      
       <div
         id="message"
-        v-bind:class="{'green' : isValid, 'red': isNotValid }"
+        v-bind:class="{ green: isValid, red: notValid }"
         v-if="resMessage.length > 0"
       >
         <p>{{ resMessage }}</p>
+        
       </div>
     </div>
     <v-form v-model="formValidity">
@@ -39,7 +41,6 @@
 </template>
 
 <script>
-import axios from "axios";
 // @ is an alias to /src
 
 export default {
@@ -48,9 +49,6 @@ export default {
     return {
       email: "",
       password: "",
-      resMessage: "",
-      isValid: false,
-      isNotValid: false,
       emailRules: [(value) => !!value || "email is required"],
       passwordRules: [(value) => !!value || "password is required"],
       formValidity: false,
@@ -58,35 +56,38 @@ export default {
   },
   methods: {
     login: function () {
-      axios
-        .post(`http://localhost:3000/api/auth/login`, {
-          email: this.email,
-          password: this.password,
-        })
-        .then((res) => {
-          console.log("response : " + res);
-          if (res.status == 200) {
-            this.isValid = true;
-            console.log('valid : ' + this.isValid)
-            this.resMessage = res.data.message;
-            sessionStorage.setItem("token", res.data.token);
-            sessionStorage.setItem("userId", res.data.userId);
-            window.location.href = "/";
-          }
-        })
-        .catch((err) => {
-          console.log("erreur catch : " + err.toJSON().message);
-          this.isNotValid = true;
-          if (err.response.status == 404) {
-            console.log("isnotvalid : " + this.isNotValid)
-            this.resMessage = "Utilisateur inconnu";
-          }
-          if (err.response.status == 400) {
-            this.resMessage = "Informations erronnées";
-          }
-        });
+      this.$store.dispatch("logUser", {
+        email: this.email,
+        password: this.password,
+      })
+      
     },
+    getLoggedUser: function () {
+      console.log(this.isLogged)
+    }
   },
+  computed: {
+    resMessage() {
+      return this.$store.state.auth.authMessage;
+    },
+    isValid() {
+      return this.$store.state.auth.isValid;
+    },
+    notValid() {
+      return this.$store.state.auth.notValid;
+    },
+    userRole() {
+      return this.$store.state.auth.user.role;
+    }
+  },
+  updated() {
+    if(this.userRole !== "visitor") {
+      console.log("logged")
+      setTimeout(() => {
+        this.$router.push('/')
+      }, 1500);
+    }
+  }
 };
 </script>
 

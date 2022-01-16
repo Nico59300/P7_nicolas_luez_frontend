@@ -1,11 +1,11 @@
 <template>
-  <v-container>
+<v-container>
     <div>
       <h3 class="text-center">Créer votre compte</h3>
       <div
         id="message"
-        v-bind:class="{ green: isValid, red: isNotValid }"
-        v-if="resMessage.length > 0"
+        v-bind:class="{ green: isValid, red: notValid }"
+        v-if="resMessage"
       >
         <p>{{ resMessage }}</p>
       </div>
@@ -50,11 +50,10 @@
         Create account
       </v-btn>
     </v-form>
-  </v-container>
+</v-container>
 </template>
 
 <script>
-import axios from "axios";
 // @ is an alias to /src
 
 export default {
@@ -63,11 +62,8 @@ export default {
     return {
       email: "",
       password: "",
-      pseudo:"",
+      pseudo: "",
       comfirmPassword: "",
-      resMessage: "",
-      isValid: false,
-      isNotValid: false,
       emailRules: [(value) => !!value || "email is required"],
       passwordRules: [
         (value) => !!value || "password is required",
@@ -77,42 +73,34 @@ export default {
         (value) => !!value || "you need to comfirm password",
         (value) => value == this.password || "password doesn't match",
       ],
-      pseudoRules: [
-        (value) => !!value || "veuillez entrer un pseudo"
-      ],
+      pseudoRules: [(value) => !!value || "veuillez entrer un pseudo"],
       formValidity: false,
     };
   },
   methods: {
     register: function () {
-      axios
-        .post(`http://localhost:3000/api/auth/signup`, {
-          email: this.email,
-          password: this.password,
-          pseudo: this.pseudo
-        })
-        .then((res) => {
-          console.log("res : " + res);
-          if (res.status == 400) {
-            console.log(res.message);
-            
-            this.resMessage = "email déjà utilisé";
-          }
-          if (res.status == 201) {
-            console.log(res.message);
-            this.isValid = true;
-            this.resMessage = "compte utilisateur créé";
-            window.location.href = "/login";
-          }
-        })
-        .catch((err) => {
-          console.log("erreur catch : " + err.toJSON().message);
-          this.isNotValid = true;
-          if (err.response.status == 400) {
-            console.log("isnotvalid : " + this.isNotValid);
-            this.resMessage = "email déjà utilisé";
-          }
-        });
+      this.$store.dispatch("register", {
+        email: this.email,
+        password: this.password,
+        pseudo: this.pseudo,
+      });
+    },
+    login: function () {
+      this.$store.dispatch("logUser", this.$store.state.auth.credentials);
+    },
+  },
+  computed: {
+    resMessage() {
+      return this.$store.state.auth.authMessage;
+    },
+    isValid() {
+      return this.$store.state.auth.isValid;
+    },
+    notValid() {
+      return this.$store.state.auth.notValid;
+    },
+    userRole() {
+      return this.$store.state.auth.user.role;
     },
   },
 };
